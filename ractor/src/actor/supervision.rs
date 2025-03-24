@@ -134,20 +134,9 @@ impl SupervisionTree {
         }
         // drain the tasks
         while let Some(res) = js.join_next().await {
-            #[cfg(feature = "async-std")]
-            {
-                match res {
-                    Err(_) => panic!("JoinSet join error"),
-                    _ => {}
-                }
-            }
-            #[cfg(not(feature = "async-std"))]
-            {
-                match res {
-                    Err(err) if err.is_panic() => std::panic::resume_unwind(err.into_panic()),
-                    Err(err) => panic!("{err}"),
-                    _ => {}
-                }
+            match res {
+                Err(_) => panic!("JoinSet join error"),
+                _ => {}
             }
         }
     }
@@ -165,20 +154,9 @@ impl SupervisionTree {
         }
         // drain the tasks
         while let Some(res) = js.join_next().await {
-            #[cfg(feature = "async-std")]
-            {
-                match res {
-                    Err(_) => panic!("JoinSet join error"),
-                    _ => {}
-                }
-            }
-            #[cfg(not(feature = "async-std"))]
-            {
-                match res {
-                    Err(err) if err.is_panic() => std::panic::resume_unwind(err.into_panic()),
-                    Err(err) => panic!("{err}"),
-                    _ => {}
-                }
+            match res {
+                Err(_) => panic!("JoinSet join error"),
+                _ => {}
             }
         }
     }

@@ -6,15 +6,15 @@
 //! Concurrency primitives based on `tokio`
 
 use std::future::Future;
-
+use tokio_with_wasm::alias as tokio;
 /// Represents a task JoinHandle
 pub type JoinHandle<T> = tokio::task::JoinHandle<T>;
 
 /// A duration of time
-pub type Duration = tokio::time::Duration;
+pub type Duration = std::time::Duration;
 
 /// An instant measured on system time
-pub type Instant = tokio::time::Instant;
+pub type Instant = ::tokio::time::Instant;
 
 /// Sleep the task for a duration of time
 pub async fn sleep(dur: Duration) {
@@ -39,8 +39,8 @@ pub type JoinSet<T> = tokio::task::JoinSet<T>;
 /// Spawn a task on the executor runtime
 pub fn spawn<F>(future: F) -> JoinHandle<F::Output>
 where
-    F: Future + Send + 'static,
-    F::Output: Send + 'static,
+    F: Future + 'static,
+    F::Output: 'static,
 {
     spawn_named(None, future)
 }
@@ -48,8 +48,8 @@ where
 /// Spawn a (possibly) named task on the executor runtime
 pub fn spawn_named<F>(name: Option<&str>, future: F) -> JoinHandle<F::Output>
 where
-    F: Future + Send + 'static,
-    F::Output: Send + 'static,
+    F: Future + 'static,
+    F::Output: 'static,
 {
     #[cfg(tokio_unstable)]
     {
@@ -99,4 +99,4 @@ macro_rules! select {
 pub(crate) use select;
 
 // test macro
-pub use tokio::test;
+pub use ::tokio::test;
