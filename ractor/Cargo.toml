@@ -14,7 +14,10 @@ categories = ["asynchronous"]
 rust-version = "1.64"
 
 [lints.rust]
-unexpected_cfgs = { level = "warn", check-cfg = ['cfg(tokio_unstable)', 'cfg(rust_analyzer)'] }
+unexpected_cfgs = { level = "warn", check-cfg = [
+    'cfg(tokio_unstable)',
+    'cfg(rust_analyzer)',
+] }
 
 [features]
 ### Other features
@@ -25,7 +28,7 @@ tokio_runtime = ["tokio/time", "tokio/rt", "tokio/macros", "tokio/tracing"]
 blanket_serde = ["serde", "pot", "cluster"]
 async-trait = ["dep:async-trait"]
 
-default = ["tokio_runtime", "message_span_propogation"]
+# default = ["tokio_runtime", "message_span_propogation"]
 
 [dependencies]
 ## Required dependencies
@@ -44,19 +47,44 @@ tracing = { version = "0.1", features = ["attributes"] }
 
 ## Blanket Serde
 serde = { version = "1", optional = true }
-pot =  { version = "3.0", optional = true }
+pot = { version = "3.0", optional = true }
+
+
+[target.'cfg(all(target_arch = "wasm32",target_os = "unknown"))'.dependencies]
+tokio_with_wasm = { version = "0.8.2", features = [
+    "macros",
+    "sync",
+    "rt",
+    "time",
+] }
 
 [dev-dependencies]
 backtrace = "0.3"
-criterion = "0.5"
+
 function_name = "0.3"
 paste = "1"
 serial_test = "3.0.0"
 rand = "0.8"
-tokio = { version = "1.30", features = ["rt", "time", "sync", "macros", "rt-multi-thread", "tracing"] }
 tracing-glog = "0.4"
-tracing-subscriber = { version = "0.3", features = ["env-filter"]}
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 tracing-test = "0.2"
+
+[target.'cfg(not(all(target_arch = "wasm32", target_os = "unknown")))'.dev-dependencies]
+tokio = { version = "1.30", features = [
+    "rt",
+    "time",
+    "sync",
+    "macros",
+    "rt-multi-thread",
+    "tracing",
+] }
+criterion = "0.5"
+
+[target.'cfg(all(target_arch = "wasm32", target_os = "unknown"))'.dev-dependencies]
+tokio = { version = "1.30", features = ["rt", "time", "sync", "macros"] }
+wasm-bindgen-test = "0.3.50"
+getrandom = { version = "*", features = ["js"] }
+criterion = { version = "0.5", default-features = false }
 
 [[bench]]
 name = "actor"
