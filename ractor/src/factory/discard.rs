@@ -133,20 +133,7 @@ impl DiscardSettings {
 /// Controls the dynamic concurrency level by receiving periodic snapshots of job statistics
 /// and emitting a new concurrency limit
 
-#[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
-    all(
-        feature = "async-trait",
-       all(target_arch = "wasm32", target_os = "unknown")
-    ),
-    crate::async_trait(?Send)
-)]
+#[ractor_async_trait_decl::ractor_async_trait_decl]
 pub trait DynamicDiscardController: Send + Sync + 'static {
     /// Compute the new threshold for discarding
     ///

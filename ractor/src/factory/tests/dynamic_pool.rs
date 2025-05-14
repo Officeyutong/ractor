@@ -48,20 +48,7 @@ struct TestWorker {
 #[cfg(feature = "cluster")]
 impl crate::Message for TestMessage {}
 
-#[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
-    all(
-        feature = "async-trait",
-       all(target_arch = "wasm32", target_os = "unknown")
-    ),
-    crate::async_trait(?Send)
-)]
+#[ractor_async_trait_decl::ractor_async_trait_decl]
 impl Worker for TestWorker {
     type Key = TestKey;
     type Message = TestMessage;

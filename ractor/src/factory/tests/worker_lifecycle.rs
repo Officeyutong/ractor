@@ -30,20 +30,7 @@ enum MyWorkerMessage {
 #[cfg(feature = "cluster")]
 impl crate::Message for MyWorkerMessage {}
 
-#[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
-    all(
-        feature = "async-trait",
-       all(target_arch = "wasm32", target_os = "unknown")
-    ),
-    crate::async_trait(?Send)
-)]
+#[ractor_async_trait_decl::ractor_async_trait_decl]
 impl Actor for MyWorker {
     type State = Self::Arguments;
     type Msg = WorkerMessage<(), MyWorkerMessage>;
