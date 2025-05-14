@@ -33,7 +33,7 @@ impl Message {
         }
     }
 }
-#[ractor::async_trait]
+#[cfg_attr(feature = "async-trait", ractor::async_trait)]
 impl Actor for PingPong {
     type Msg = Message;
     type Arguments = ();

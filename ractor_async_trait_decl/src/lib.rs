@@ -51,7 +51,7 @@ pub fn ractor_async_trait_decl(attr: TokenStream, input: TokenStream) -> TokenSt
                 feature = "async-trait",
                 all(target_arch = "wasm32", target_os = "unknown")
             ),
-            #async_trait_path(?Send)
+            #async_trait_path (?Send)
         )]
         #input_trait
     })
