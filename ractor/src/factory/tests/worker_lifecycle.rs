@@ -224,20 +224,7 @@ where
         _m: PhantomData<fn() -> TMessage2>,
     }
 
-    #[cfg_attr(
-        all(
-            feature = "async-trait",
-            not(all(target_arch = "wasm32", target_os = "unknown"))
-        ),
-        crate::async_trait
-    )]
-    #[cfg_attr(
-    all(
-        feature = "async-trait",
-       all(target_arch = "wasm32", target_os = "unknown")
-    ),
-    crate::async_trait(?Send)
-)]
+#[ractor_async_trait_decl::ractor_async_trait_decl]
     impl<F2, TKey2, TMessage2> Actor for MockFactory<F2, TKey2, TMessage2>
     where
         TKey2: JobKey,

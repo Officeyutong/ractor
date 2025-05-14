@@ -549,20 +549,7 @@ async fn test_pg_monitoring() {
         pg_group: GroupName,
     }
 
-    #[cfg_attr(
-        all(
-            feature = "async-trait",
-            not(all(target_arch = "wasm32", target_os = "unknown"))
-        ),
-        crate::async_trait
-    )]
-    #[cfg_attr(
-    all(
-        feature = "async-trait",
-       all(target_arch = "wasm32", target_os = "unknown")
-    ),
-    crate::async_trait(?Send)
-)]
+#[ractor_async_trait_decl::ractor_async_trait_decl]
     impl Actor for AutoJoinActor {
         type Msg = ();
         type Arguments = ();
@@ -583,20 +570,7 @@ async fn test_pg_monitoring() {
         counter: Arc<AtomicU8>,
     }
 
-    #[cfg_attr(
-        all(
-            feature = "async-trait",
-            not(all(target_arch = "wasm32", target_os = "unknown"))
-        ),
-        crate::async_trait
-    )]
-    #[cfg_attr(
-    all(
-        feature = "async-trait",
-       all(target_arch = "wasm32", target_os = "unknown")
-    ),
-    crate::async_trait(?Send)
-)]
+#[ractor_async_trait_decl::ractor_async_trait_decl]
     impl Actor for NotificationMonitor {
         type Msg = ();
         type Arguments = ();
@@ -686,20 +660,7 @@ async fn test_scope_monitoring() {
         pg_group: GroupName,
     }
 
-    #[cfg_attr(
-        all(
-            feature = "async-trait",
-            not(all(target_arch = "wasm32", target_os = "unknown"))
-        ),
-        crate::async_trait
-    )]
-    #[cfg_attr(
-    all(
-        feature = "async-trait",
-       all(target_arch = "wasm32", target_os = "unknown")
-    ),
-    crate::async_trait(?Send)
-)]
+#[ractor_async_trait_decl::ractor_async_trait_decl]
     impl Actor for AutoJoinActor {
         type Msg = ();
         type Arguments = ();
@@ -724,20 +685,7 @@ async fn test_scope_monitoring() {
         counter: Arc<AtomicU8>,
     }
 
-    #[cfg_attr(
-        all(
-            feature = "async-trait",
-            not(all(target_arch = "wasm32", target_os = "unknown"))
-        ),
-        crate::async_trait
-    )]
-    #[cfg_attr(
-    all(
-        feature = "async-trait",
-       all(target_arch = "wasm32", target_os = "unknown")
-    ),
-    crate::async_trait(?Send)
-)]
+#[ractor_async_trait_decl::ractor_async_trait_decl]
     impl Actor for NotificationMonitor {
         type Msg = ();
         type Arguments = ();
@@ -853,20 +801,7 @@ async fn local_vs_remote_pg_members() {
     struct TestRemoteActor;
     struct TestRemoteActorMessage;
     impl crate::Message for TestRemoteActorMessage {}
-    #[cfg_attr(
-        all(
-            feature = "async-trait",
-            not(all(target_arch = "wasm32", target_os = "unknown"))
-        ),
-        crate::async_trait
-    )]
-    #[cfg_attr(
-    all(
-        feature = "async-trait",
-       all(target_arch = "wasm32", target_os = "unknown")
-    ),
-    crate::async_trait(?Send)
-)]
+#[ractor_async_trait_decl::ractor_async_trait_decl]
     impl Actor for TestRemoteActor {
         type Msg = TestRemoteActorMessage;
         type State = ();
@@ -940,20 +875,7 @@ async fn local_vs_remote_pg_members_in_named_scopes() {
     struct TestRemoteActor;
     struct TestRemoteActorMessage;
     impl crate::Message for TestRemoteActorMessage {}
-    #[cfg_attr(
-        all(
-            feature = "async-trait",
-            not(all(target_arch = "wasm32", target_os = "unknown"))
-        ),
-        crate::async_trait
-    )]
-    #[cfg_attr(
-    all(
-        feature = "async-trait",
-       all(target_arch = "wasm32", target_os = "unknown")
-    ),
-    crate::async_trait(?Send)
-)]
+#[ractor_async_trait_decl::ractor_async_trait_decl]
     impl Actor for TestRemoteActor {
         type Msg = TestRemoteActorMessage;
         type State = ();
