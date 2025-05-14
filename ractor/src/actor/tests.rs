@@ -39,13 +39,13 @@ async fn test_panic_on_start_captured() {
     struct TestActor;
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -79,13 +79,13 @@ async fn test_error_on_start_captured() {
     struct TestActor;
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -123,13 +123,13 @@ async fn test_stop_higher_priority_over_messages() {
     }
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -214,13 +214,13 @@ async fn test_kill_terminates_work() {
     struct TestActor;
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -276,13 +276,13 @@ async fn test_stop_does_not_terminate_async_work() {
     struct TestActor;
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -347,13 +347,13 @@ async fn test_kill_terminates_supervision_work() {
     struct TestActor;
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -413,13 +413,13 @@ async fn test_sending_message_to_invalid_actor_type() {
     #[cfg(feature = "cluster")]
     impl crate::Message for TestMessage1 {}
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -443,13 +443,13 @@ async fn test_sending_message_to_invalid_actor_type() {
     #[cfg(feature = "cluster")]
     impl crate::Message for TestMessage2 {}
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -499,13 +499,13 @@ async fn test_sending_message_to_dead_actor() {
     struct TestActor;
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -576,13 +576,13 @@ async fn test_serialized_cast() {
     }
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -724,13 +724,13 @@ async fn test_serialized_rpc() {
     }
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -818,13 +818,13 @@ async fn test_remote_actor() {
 
     struct DummySupervisor;
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -866,13 +866,13 @@ async fn test_remote_actor() {
     }
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -955,13 +955,13 @@ async fn spawning_local_actor_as_remote_fails() {
     struct RemoteActorMessage;
     impl crate::Message for RemoteActorMessage {}
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -983,13 +983,13 @@ async fn spawning_local_actor_as_remote_fails() {
 
     struct EmptyActor;
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -1039,13 +1039,13 @@ async fn instant_spawns() {
 
     struct EmptyActor;
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -1114,13 +1114,13 @@ async fn instant_spawns() {
 async fn stop_and_wait() {
     struct SlowActor;
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -1159,13 +1159,13 @@ async fn stop_and_wait() {
 async fn kill_and_wait() {
     struct SlowActor;
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -1216,13 +1216,13 @@ fn returns_actor_references() {
     struct TestActor;
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -1282,13 +1282,13 @@ async fn actor_failing_in_spawn_err_doesnt_poison_registries() {
     struct Test;
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -1309,13 +1309,13 @@ async fn actor_failing_in_spawn_err_doesnt_poison_registries() {
     struct Test2;
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -1358,13 +1358,13 @@ async fn actor_post_stop_executed_before_stop_and_wait_returns() {
     }
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -1427,13 +1427,13 @@ async fn actor_drain_messages() {
     }
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -1504,13 +1504,13 @@ async fn runtime_message_typing() {
     struct TestActor;
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -1553,13 +1553,13 @@ async fn wait_for_death() {
     struct TestActor;
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -1614,13 +1614,13 @@ async fn derived_actor_ref() {
     }
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")

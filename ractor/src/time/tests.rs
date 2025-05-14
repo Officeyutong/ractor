@@ -28,13 +28,13 @@ async fn test_intervals() {
     }
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -108,13 +108,13 @@ async fn test_send_after() {
     }
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -184,13 +184,13 @@ async fn test_exit_after() {
     struct TestActor;
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -232,13 +232,13 @@ async fn test_kill_after() {
     struct TestActor;
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")

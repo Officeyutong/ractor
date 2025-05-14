@@ -20,13 +20,13 @@ async fn test_basic_registation() {
     struct EmptyActor;
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -71,13 +71,13 @@ async fn test_duplicate_registration() {
     struct EmptyActor;
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -135,13 +135,13 @@ async fn test_actor_registry_unenrollment() {
     struct EmptyActor;
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -200,13 +200,13 @@ mod pid_registry_tests {
     struct RemoteActorMessage;
     impl crate::Message for RemoteActorMessage {}
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -234,13 +234,13 @@ mod pid_registry_tests {
     async fn try_enroll_remote_actor() {
         struct EmptyActor;
         #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+            all(
+                feature = "async-trait",
+                not(all(target_arch = "wasm32", target_os = "unknown"))
+            ),
+            crate::async_trait
+        )]
+        #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -297,13 +297,13 @@ mod pid_registry_tests {
         struct EmptyActor;
 
         #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+            all(
+                feature = "async-trait",
+                not(all(target_arch = "wasm32", target_os = "unknown"))
+            ),
+            crate::async_trait
+        )]
+        #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -347,13 +347,13 @@ mod pid_registry_tests {
         struct EmptyActor;
 
         #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+            all(
+                feature = "async-trait",
+                not(all(target_arch = "wasm32", target_os = "unknown"))
+            ),
+            crate::async_trait
+        )]
+        #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -407,13 +407,13 @@ mod pid_registry_tests {
         struct AutoJoinActor;
 
         #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+            all(
+                feature = "async-trait",
+                not(all(target_arch = "wasm32", target_os = "unknown"))
+            ),
+            crate::async_trait
+        )]
+        #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -439,13 +439,13 @@ mod pid_registry_tests {
         }
 
         #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+            all(
+                feature = "async-trait",
+                not(all(target_arch = "wasm32", target_os = "unknown"))
+            ),
+            crate::async_trait
+        )]
+        #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")

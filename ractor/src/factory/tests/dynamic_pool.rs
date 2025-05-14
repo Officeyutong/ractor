@@ -211,13 +211,13 @@ async fn test_worker_pool_adjustment_automatic() {
     struct DynamicWorkerController;
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")

@@ -550,13 +550,13 @@ async fn test_pg_monitoring() {
     }
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -584,13 +584,13 @@ async fn test_pg_monitoring() {
     }
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -687,13 +687,13 @@ async fn test_scope_monitoring() {
     }
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -725,13 +725,13 @@ async fn test_scope_monitoring() {
     }
 
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -854,13 +854,13 @@ async fn local_vs_remote_pg_members() {
     struct TestRemoteActorMessage;
     impl crate::Message for TestRemoteActorMessage {}
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
@@ -941,13 +941,13 @@ async fn local_vs_remote_pg_members_in_named_scopes() {
     struct TestRemoteActorMessage;
     impl crate::Message for TestRemoteActorMessage {}
     #[cfg_attr(
-    all(
-        feature = "async-trait",
-        not(all(target_arch = "wasm32", target_os = "unknown"))
-    ),
-    crate::async_trait
-)]
-#[cfg_attr(
+        all(
+            feature = "async-trait",
+            not(all(target_arch = "wasm32", target_os = "unknown"))
+        ),
+        crate::async_trait
+    )]
+    #[cfg_attr(
     all(
         feature = "async-trait",
        all(target_arch = "wasm32", target_os = "unknown")
