@@ -8,6 +8,8 @@
 use std::fmt::Debug;
 use std::panic::AssertUnwindSafe;
 use std::sync::atomic::AtomicU8;
+#[cfg(feature = "metrics")]
+use std::sync::atomic::AtomicUsize;
 use std::sync::Arc;
 use std::sync::Mutex;
 
@@ -25,6 +27,8 @@ use crate::actor::get_panic_string;
 use crate::actor::messages::StopMessage;
 use crate::actor::ActorLoopResult;
 use crate::concurrency as mpsc;
+#[cfg(feature = "metrics")]
+use crate::concurrency::Instant;
 use crate::concurrency::JoinHandle;
 use crate::concurrency::OneshotReceiver;
 use crate::message::Message;
@@ -109,6 +113,8 @@ impl ActorProperties {
                 type_id: std::any::TypeId::of::<TActor::Msg>(),
                 #[cfg(feature = "cluster")]
                 supports_remoting: TActor::Msg::serializable(),
+                #[cfg(feature = "metrics")]
+                queue_depth: AtomicUsize::new(0),
             },
             rx_signal,
             rx_stop,
@@ -428,6 +434,8 @@ impl<TActor: ThreadLocalActor> ThreadLocalActorRuntime<TActor> {
                     }
                 }
                 actor_cell::ActorPortMessage::Message(MuxedMessage::Message(msg)) => {
+                    #[cfg(feature = "metrics")]
+                    myself.record_message_dequeued();
                     let future = Self::handle_message(myself.clone(), state, handler, msg);
                     match ports.run_with_signal(future).await {
                         Ok(Ok(())) => Ok(ActorLoopResult::ok()),
@@ -476,6 +484,20 @@ impl<TActor: ThreadLocalActor> ThreadLocalActorRuntime<TActor> {
         handler: &TActor,
         mut msg: crate::message::BoxedMessage,
     ) -> Result<(), ActorProcessingErr> {
+        #[cfg(feature = "metrics")]
+        let metrics_actor_id = myself.get_id().to_string();
+        #[cfg(feature = "metrics")]
+        let metrics_actor_name = myself.get_name();
+        #[cfg(feature = "metrics")]
+        if let Some(enqueued_at) = msg.enqueue_at.take() {
+            crate::actor::emit_histogram_metric(
+                "ractor.msg_pending",
+                &metrics_actor_id,
+                metrics_actor_name.as_deref(),
+                enqueued_at.elapsed().as_millis() as f64,
+            );
+        }
+
         // panic in order to kill the actor
         #[cfg(feature = "cluster")]
         {
@@ -506,14 +528,27 @@ impl<TActor: ThreadLocalActor> ThreadLocalActorRuntime<TActor> {
         // An error here will bubble up to terminate the actor
         let typed_msg = TActor::Msg::from_boxed(msg)?;
 
-        if let Some(span) = current_span_when_message_was_sent {
+        #[cfg(feature = "metrics")]
+        let exec_start = Instant::now();
+
+        let result = if let Some(span) = current_span_when_message_was_sent {
             handler
                 .handle(myself, typed_msg, state)
                 .instrument(span)
                 .await
         } else {
             handler.handle(myself, typed_msg, state).await
-        }
+        };
+
+        #[cfg(feature = "metrics")]
+        crate::actor::emit_histogram_metric(
+            "ractor.msg_execute",
+            &metrics_actor_id,
+            metrics_actor_name.as_deref(),
+            exec_start.elapsed().as_millis() as f64,
+        );
+
+        result
     }
 
     fn handle_signal(myself: ActorRef<TActor::Msg>, signal: Signal) -> Option<String> {

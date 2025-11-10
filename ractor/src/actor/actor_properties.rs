@@ -4,6 +4,8 @@
 // LICENSE-MIT file in the root directory of this source tree.
 
 use std::sync::atomic::AtomicU8;
+#[cfg(feature = "metrics")]
+use std::sync::atomic::AtomicUsize;
 use std::sync::atomic::Ordering;
 use std::sync::Arc;
 use std::sync::Mutex;
@@ -48,6 +50,8 @@ pub(crate) struct ActorProperties {
     pub(crate) type_id: std::any::TypeId,
     #[cfg(feature = "cluster")]
     pub(crate) supports_remoting: bool,
+    #[cfg(feature = "metrics")]
+    queue_depth: AtomicUsize,
 }
 
 impl ActorProperties {
@@ -97,6 +101,8 @@ impl ActorProperties {
                 type_id: std::any::TypeId::of::<TActor::Msg>(),
                 #[cfg(feature = "cluster")]
                 supports_remoting: TActor::Msg::serializable(),
+                #[cfg(feature = "metrics")]
+                queue_depth: AtomicUsize::new(0),
             },
             rx_signal,
             rx_stop,
@@ -157,15 +163,29 @@ impl ActorProperties {
             return Err(MessagingErr::SendErr(message));
         }
 
-        let boxed = message
+        #[allow(unused_mut)]
+        let mut boxed = message
             .box_message(&self.id)
             .map_err(|_e| MessagingErr::InvalidActorType)?;
-        self.message
-            .send(MuxedMessage::Message(boxed))
-            .map_err(|e| match e.0 {
-                MuxedMessage::Message(m) => MessagingErr::SendErr(TMessage::from_boxed(m).unwrap()),
+
+        #[cfg(feature = "metrics")]
+        {
+            boxed.enqueue_at = Some(crate::concurrency::Instant::now());
+        }
+
+        match self.message.send(MuxedMessage::Message(boxed)) {
+            Ok(()) => {
+                #[cfg(feature = "metrics")]
+                self.inc_queue_depth();
+                Ok(())
+            }
+            Err(e) => match e.0 {
+                MuxedMessage::Message(m) => {
+                    Err(MessagingErr::SendErr(TMessage::from_boxed(m).unwrap()))
+                }
                 _ => panic!("Expected a boxed message but got a drain message"),
-            })
+            },
+        }
     }
 
     pub(crate) fn drain(&self) -> Result<(), MessagingErr<()>> {
@@ -200,14 +220,21 @@ impl ActorProperties {
             msg: None,
             serialized_msg: Some(message),
             span: None,
+            #[cfg(feature = "metrics")]
+            enqueue_at: None,
         };
-        Ok(self
-            .message
-            .send(MuxedMessage::Message(boxed))
-            .map_err(|e| match e.0 {
+
+        Ok(match self.message.send(MuxedMessage::Message(boxed)) {
+            Ok(()) => {
+                #[cfg(feature = "metrics")]
+                self.inc_queue_depth();
+                Ok(())
+            }
+            Err(e) => Err(match e.0 {
                 MuxedMessage::Message(m) => MessagingErr::SendErr(m.serialized_msg.unwrap()),
                 _ => panic!("Expected a boxed message but got a drain message"),
-            })?)
+            }),
+        }?)
     }
 
     pub(crate) fn send_stop(
@@ -259,5 +286,38 @@ impl ActorProperties {
         // a notify permit (i.e. the actor stops, but you are only start waiting
         // after the actor has already notified it's dead.)
         self.wait_handler.notify_one();
+    }
+
+    #[cfg(feature = "metrics")]
+    fn inc_queue_depth(&self) {
+        let depth = self
+            .queue_depth
+            .fetch_add(1, Ordering::SeqCst)
+            .saturating_add(1);
+        self.update_queue_depth(depth);
+    }
+
+    #[cfg(feature = "metrics")]
+    pub(crate) fn dec_queue_depth(&self) {
+        let depth = self
+            .queue_depth
+            .fetch_sub(1, Ordering::SeqCst)
+            .saturating_sub(1);
+        self.update_queue_depth(depth);
+    }
+
+    #[cfg(feature = "metrics")]
+    fn update_queue_depth(&self, depth: usize) {
+        let actor_id = self.id.to_string();
+        if let Some(name) = &self.name {
+            metrics::gauge!(
+                "ractor.queue_depth",
+                "actor_id" => actor_id,
+                "actor_name" => name.clone()
+            )
+            .set(depth as f64);
+        } else {
+            metrics::gauge!("ractor.queue_depth", "actor_id" => actor_id).set(depth as f64);
+        }
     }
 }

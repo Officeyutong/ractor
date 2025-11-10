@@ -9,6 +9,8 @@
 
 use std::any::Any;
 
+#[cfg(feature = "metrics")]
+use crate::concurrency::Instant;
 use crate::ActorId;
 #[cfg(feature = "cluster")]
 use crate::RpcReplyPort;
@@ -65,6 +67,8 @@ pub struct BoxedMessage {
     #[cfg(feature = "cluster")]
     pub serialized_msg: Option<SerializedMessage>,
     pub(crate) span: Option<tracing::Span>,
+    #[cfg(feature = "metrics")]
+    pub(crate) enqueue_at: Option<Instant>,
 }
 
 impl std::fmt::Debug for BoxedMessage {
@@ -150,12 +154,16 @@ pub trait Message: Any + Send + Sized + 'static {
                 msg: None,
                 serialized_msg: Some(self.serialize()?),
                 span: None,
+                #[cfg(feature = "metrics")]
+                enqueue_at: None,
             })
         } else if pid.is_local() {
             Ok(BoxedMessage {
                 msg: Some(Box::new(self)),
                 serialized_msg: None,
                 span,
+                #[cfg(feature = "metrics")]
+                enqueue_at: None,
             })
         } else {
             Err(BoxedDowncastErr)
@@ -179,6 +187,8 @@ pub trait Message: Any + Send + Sized + 'static {
         Ok(BoxedMessage {
             msg: Some(Box::new(self)),
             span,
+            #[cfg(feature = "metrics")]
+            enqueue_at: None,
         })
     }
 
