@@ -59,6 +59,8 @@ use actor_properties::MuxedMessage;
 use futures::TryFutureExt;
 use tracing::Instrument;
 
+#[cfg(feature = "metrics")]
+use crate::concurrency::Instant;
 use crate::concurrency::JoinHandle;
 #[cfg(not(feature = "async-trait"))]
 use crate::concurrency::MaybeSend;
@@ -908,6 +910,8 @@ where
                     }
                 }
                 actor_cell::ActorPortMessage::Message(MuxedMessage::Message(msg)) => {
+                    #[cfg(feature = "metrics")]
+                    myself.record_message_dequeued();
                     let future = Self::handle_message(myself.clone(), state, handler, msg);
                     match ports.run_with_signal(future).await {
                         Ok(Ok(())) => Ok(ActorLoopResult::ok()),
@@ -956,6 +960,20 @@ where
         handler: &TActor,
         mut msg: crate::message::BoxedMessage,
     ) -> Result<(), ActorProcessingErr> {
+        #[cfg(feature = "metrics")]
+        let metrics_actor_id = myself.get_id().to_string();
+        #[cfg(feature = "metrics")]
+        let metrics_actor_name = myself.get_name();
+        #[cfg(feature = "metrics")]
+        if let Some(enqueued_at) = msg.enqueue_at.take() {
+            crate::actor::emit_histogram_metric(
+                "ractor.msg_pending",
+                &metrics_actor_id,
+                metrics_actor_name.as_deref(),
+                enqueued_at.elapsed().as_millis() as f64,
+            );
+        }
+
         // panic in order to kill the actor
         #[cfg(feature = "cluster")]
         {
@@ -986,14 +1004,27 @@ where
         // An error here will bubble up to terminate the actor
         let typed_msg = TActor::Msg::from_boxed(msg)?;
 
-        if let Some(span) = current_span_when_message_was_sent {
+        #[cfg(feature = "metrics")]
+        let exec_start = Instant::now();
+
+        let result = if let Some(span) = current_span_when_message_was_sent {
             handler
                 .handle(myself, typed_msg, state)
                 .instrument(span)
                 .await
         } else {
             handler.handle(myself, typed_msg, state).await
-        }
+        };
+
+        #[cfg(feature = "metrics")]
+        crate::actor::emit_histogram_metric(
+            "ractor.msg_execute",
+            &metrics_actor_id,
+            metrics_actor_name.as_deref(),
+            exec_start.elapsed().as_millis() as f64,
+        );
+
+        result
     }
 
     fn handle_signal(myself: ActorRef<TActor::Msg>, signal: Signal) -> Option<String> {
@@ -1045,5 +1076,24 @@ where
         futures::FutureExt::catch_unwind(AssertUnwindSafe(future))
             .await
             .map_err(|err| ActorErr::Failed(get_panic_string(err)))
+    }
+}
+
+#[cfg(feature = "metrics")]
+pub(crate) fn emit_histogram_metric(
+    metric: &'static str,
+    actor_id: &str,
+    actor_name: Option<&str>,
+    value: f64,
+) {
+    if let Some(name) = actor_name {
+        metrics::histogram!(
+            metric,
+            "actor_id" => actor_id.to_owned(),
+            "actor_name" => name.to_owned()
+        )
+        .record(value);
+    } else {
+        metrics::histogram!(metric, "actor_id" => actor_id.to_owned()).record(value);
     }
 }

@@ -682,6 +682,11 @@ impl ActorCell {
         crate::actor::ActorRuntime::spawn_linked(name, handler, startup_args, self.clone()).await
     }
 
+    #[cfg(feature = "metrics")]
+    pub(crate) fn record_message_dequeued(&self) {
+        self.inner.dec_queue_depth();
+    }
+
     // ================== Test Utilities ================== //
 
     #[cfg(test)]
