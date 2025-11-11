@@ -51,7 +51,7 @@ pub(crate) struct ActorProperties {
     #[cfg(feature = "cluster")]
     pub(crate) supports_remoting: bool,
     #[cfg(feature = "metrics")]
-    queue_depth: AtomicUsize,
+    pub(crate) queue_depth: AtomicUsize,
 }
 
 impl ActorProperties {
