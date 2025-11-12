@@ -963,13 +963,10 @@ where
         #[cfg(feature = "metrics")]
         let metrics_actor_id = myself.get_id().to_string();
         #[cfg(feature = "metrics")]
-        let metrics_actor_name = myself.get_name();
-        #[cfg(feature = "metrics")]
         if let Some(enqueued_at) = msg.enqueue_at.take() {
             crate::actor::emit_histogram_metric(
                 "ractor.msg_pending",
                 &metrics_actor_id,
-                metrics_actor_name.as_deref(),
                 enqueued_at.elapsed().as_millis() as f64,
             );
         }
@@ -1020,7 +1017,6 @@ where
         crate::actor::emit_histogram_metric(
             "ractor.msg_execute",
             &metrics_actor_id,
-            metrics_actor_name.as_deref(),
             exec_start.elapsed().as_millis() as f64,
         );
 
@@ -1080,20 +1076,6 @@ where
 }
 
 #[cfg(feature = "metrics")]
-pub(crate) fn emit_histogram_metric(
-    metric: &'static str,
-    actor_id: &str,
-    actor_name: Option<&str>,
-    value: f64,
-) {
-    if let Some(name) = actor_name {
-        metrics::histogram!(
-            metric,
-            "actor_id" => actor_id.to_owned(),
-            "actor_name" => name.to_owned()
-        )
-        .record(value);
-    } else {
-        metrics::histogram!(metric, "actor_id" => actor_id.to_owned()).record(value);
-    }
+pub(crate) fn emit_histogram_metric(metric: &'static str, actor_id: &str, value: f64) {
+    metrics::histogram!(metric, "actor_id" => actor_id.to_owned()).record(value);
 }
