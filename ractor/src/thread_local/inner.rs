@@ -487,13 +487,10 @@ impl<TActor: ThreadLocalActor> ThreadLocalActorRuntime<TActor> {
         #[cfg(feature = "metrics")]
         let metrics_actor_id = myself.get_id().to_string();
         #[cfg(feature = "metrics")]
-        let metrics_actor_name = myself.get_name();
-        #[cfg(feature = "metrics")]
         if let Some(enqueued_at) = msg.enqueue_at.take() {
             crate::actor::emit_histogram_metric(
                 "ractor.msg_pending",
                 &metrics_actor_id,
-                metrics_actor_name.as_deref(),
                 enqueued_at.elapsed().as_millis() as f64,
             );
         }
@@ -544,7 +541,6 @@ impl<TActor: ThreadLocalActor> ThreadLocalActorRuntime<TActor> {
         crate::actor::emit_histogram_metric(
             "ractor.msg_execute",
             &metrics_actor_id,
-            metrics_actor_name.as_deref(),
             exec_start.elapsed().as_millis() as f64,
         );
 
