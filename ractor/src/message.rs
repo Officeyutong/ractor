@@ -240,3 +240,8 @@ impl<T: Any + Send + Sized + 'static + crate::serialization::BytesConvertable> M
         }
     }
 }
+
+#[cfg(feature = "metrics")]
+pub(crate) fn format_message_for_logging<T: Message>(_: &T) -> String {
+    std::any::type_name::<T>().to_string()
+}

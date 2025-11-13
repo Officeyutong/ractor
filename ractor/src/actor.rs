@@ -60,6 +60,9 @@ use futures::TryFutureExt;
 use tracing::Instrument;
 
 #[cfg(feature = "metrics")]
+const MESSAGE_WARN_THRESHOLD: std::time::Duration = std::time::Duration::from_secs(15);
+
+#[cfg(feature = "metrics")]
 use crate::concurrency::Instant;
 use crate::concurrency::JoinHandle;
 #[cfg(not(feature = "async-trait"))]
@@ -965,12 +968,16 @@ where
         #[cfg(feature = "metrics")]
         let metrics_actor_type = std::any::type_name::<TActor>();
         #[cfg(feature = "metrics")]
+        let mut message_pending_duration: Option<std::time::Duration> = None;
+        #[cfg(feature = "metrics")]
         if let Some(enqueued_at) = msg.enqueue_at.take() {
+            let elapsed = enqueued_at.elapsed();
+            message_pending_duration = Some(elapsed);
             crate::actor::emit_histogram_metric(
                 "ractor.msg_pending",
                 &metrics_actor_id,
                 metrics_actor_type,
-                enqueued_at.elapsed().as_millis() as f64,
+                elapsed.as_millis() as f64,
             );
         }
 
@@ -1005,6 +1012,24 @@ where
         let typed_msg = TActor::Msg::from_boxed(msg)?;
 
         #[cfg(feature = "metrics")]
+        let message_repr = crate::message::format_message_for_logging(&typed_msg);
+
+        #[cfg(feature = "metrics")]
+        if let Some(duration) = message_pending_duration.take() {
+            if duration >= MESSAGE_WARN_THRESHOLD {
+                tracing::warn!(
+                    target: "ractor::actor",
+                    actor_id = %metrics_actor_id,
+                    actor_type = metrics_actor_type,
+                    message = %message_repr,
+                    pending_ms = duration.as_millis(),
+                    "Actor message pending longer than {}s",
+                    MESSAGE_WARN_THRESHOLD.as_secs()
+                );
+            }
+        }
+
+        #[cfg(feature = "metrics")]
         let exec_start = Instant::now();
 
         let result = if let Some(span) = current_span_when_message_was_sent {
@@ -1017,12 +1042,27 @@ where
         };
 
         #[cfg(feature = "metrics")]
-        crate::actor::emit_histogram_metric(
-            "ractor.msg_execute",
-            &metrics_actor_id,
-            metrics_actor_type,
-            exec_start.elapsed().as_millis() as f64,
-        );
+        {
+            let exec_duration = exec_start.elapsed();
+            crate::actor::emit_histogram_metric(
+                "ractor.msg_execute",
+                &metrics_actor_id,
+                metrics_actor_type,
+                exec_duration.as_millis() as f64,
+            );
+
+            if exec_duration >= MESSAGE_WARN_THRESHOLD {
+                tracing::warn!(
+                    target: "ractor::actor",
+                    actor_id = %metrics_actor_id,
+                    actor_type = metrics_actor_type,
+                    message = %message_repr,
+                    execute_ms = exec_duration.as_millis(),
+                    "Actor message execution longer than {}s",
+                    MESSAGE_WARN_THRESHOLD.as_secs()
+                );
+            }
+        }
 
         result
     }
