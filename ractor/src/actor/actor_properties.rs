@@ -51,6 +51,8 @@ pub(crate) struct ActorProperties {
     #[cfg(feature = "cluster")]
     pub(crate) supports_remoting: bool,
     #[cfg(feature = "metrics")]
+    pub(crate) actor_type_name: &'static str,
+    #[cfg(feature = "metrics")]
     pub(crate) queue_depth: AtomicUsize,
 }
 
@@ -101,6 +103,8 @@ impl ActorProperties {
                 type_id: std::any::TypeId::of::<TActor::Msg>(),
                 #[cfg(feature = "cluster")]
                 supports_remoting: TActor::Msg::serializable(),
+                #[cfg(feature = "metrics")]
+                actor_type_name: std::any::type_name::<TActor>(),
                 #[cfg(feature = "metrics")]
                 queue_depth: AtomicUsize::new(0),
             },
@@ -309,6 +313,11 @@ impl ActorProperties {
     #[cfg(feature = "metrics")]
     fn update_queue_depth(&self, depth: usize) {
         let actor_id = self.id.to_string();
-        metrics::gauge!("ractor.queue_depth", "actor_id" => actor_id).set(depth as f64);
+        metrics::gauge!(
+            "ractor.queue_depth",
+            "actor_id" => actor_id,
+            "actor_type" => self.actor_type_name,
+        )
+        .set(depth as f64);
     }
 }

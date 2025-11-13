@@ -114,6 +114,8 @@ impl ActorProperties {
                 #[cfg(feature = "cluster")]
                 supports_remoting: TActor::Msg::serializable(),
                 #[cfg(feature = "metrics")]
+                actor_type_name: std::any::type_name::<TActor>(),
+                #[cfg(feature = "metrics")]
                 queue_depth: AtomicUsize::new(0),
             },
             rx_signal,
@@ -487,10 +489,13 @@ impl<TActor: ThreadLocalActor> ThreadLocalActorRuntime<TActor> {
         #[cfg(feature = "metrics")]
         let metrics_actor_id = myself.get_id().to_string();
         #[cfg(feature = "metrics")]
+        let metrics_actor_type = std::any::type_name::<TActor>();
+        #[cfg(feature = "metrics")]
         if let Some(enqueued_at) = msg.enqueue_at.take() {
             crate::actor::emit_histogram_metric(
                 "ractor.msg_pending",
                 &metrics_actor_id,
+                metrics_actor_type,
                 enqueued_at.elapsed().as_millis() as f64,
             );
         }
@@ -541,6 +546,7 @@ impl<TActor: ThreadLocalActor> ThreadLocalActorRuntime<TActor> {
         crate::actor::emit_histogram_metric(
             "ractor.msg_execute",
             &metrics_actor_id,
+            metrics_actor_type,
             exec_start.elapsed().as_millis() as f64,
         );
 
