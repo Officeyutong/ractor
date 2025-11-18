@@ -177,18 +177,22 @@ impl ActorProperties {
             boxed.enqueue_at = Some(crate::concurrency::Instant::now());
         }
 
+        #[cfg(feature = "metrics")]
+        self.inc_queue_depth();
+
         match self.message.send(MuxedMessage::Message(boxed)) {
-            Ok(()) => {
+            Ok(()) => Ok(()),
+            Err(e) => {
                 #[cfg(feature = "metrics")]
-                self.inc_queue_depth();
-                Ok(())
-            }
-            Err(e) => match e.0 {
-                MuxedMessage::Message(m) => {
-                    Err(MessagingErr::SendErr(TMessage::from_boxed(m).unwrap()))
+                self.dec_queue_depth();
+
+                match e.0 {
+                    MuxedMessage::Message(m) => {
+                        Err(MessagingErr::SendErr(TMessage::from_boxed(m).unwrap()))
+                    }
+                    _ => panic!("Expected a boxed message but got a drain message"),
                 }
-                _ => panic!("Expected a boxed message but got a drain message"),
-            },
+            }
         }
     }
 
@@ -228,16 +232,20 @@ impl ActorProperties {
             enqueue_at: None,
         };
 
+        #[cfg(feature = "metrics")]
+        self.inc_queue_depth();
+
         Ok(match self.message.send(MuxedMessage::Message(boxed)) {
-            Ok(()) => {
+            Ok(()) => Ok(()),
+            Err(e) => {
                 #[cfg(feature = "metrics")]
-                self.inc_queue_depth();
-                Ok(())
+                self.dec_queue_depth();
+
+                Err(match e.0 {
+                    MuxedMessage::Message(m) => MessagingErr::SendErr(m.serialized_msg.unwrap()),
+                    _ => panic!("Expected a boxed message but got a drain message"),
+                })
             }
-            Err(e) => Err(match e.0 {
-                MuxedMessage::Message(m) => MessagingErr::SendErr(m.serialized_msg.unwrap()),
-                _ => panic!("Expected a boxed message but got a drain message"),
-            }),
         }?)
     }
 
