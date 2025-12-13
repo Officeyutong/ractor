@@ -964,8 +964,6 @@ where
         mut msg: crate::message::BoxedMessage,
     ) -> Result<(), ActorProcessingErr> {
         #[cfg(feature = "metrics")]
-        let metrics_actor_id = myself.get_id().to_string();
-        #[cfg(feature = "metrics")]
         let metrics_actor_type = std::any::type_name::<TActor>();
         #[cfg(feature = "metrics")]
         let mut message_pending_duration: Option<std::time::Duration> = None;
@@ -975,7 +973,6 @@ where
             message_pending_duration = Some(elapsed);
             crate::actor::emit_histogram_metric(
                 "ractor.msg_pending",
-                &metrics_actor_id,
                 metrics_actor_type,
                 elapsed.as_millis() as f64,
             );
@@ -1019,7 +1016,6 @@ where
             if duration >= MESSAGE_WARN_THRESHOLD {
                 tracing::warn!(
                     target: "ractor::actor",
-                    actor_id = %metrics_actor_id,
                     actor_type = metrics_actor_type,
                     message = %message_repr,
                     pending_ms = duration.as_millis(),
@@ -1046,7 +1042,6 @@ where
             let exec_duration = exec_start.elapsed();
             crate::actor::emit_histogram_metric(
                 "ractor.msg_execute",
-                &metrics_actor_id,
                 metrics_actor_type,
                 exec_duration.as_millis() as f64,
             );
@@ -1054,7 +1049,6 @@ where
             if exec_duration >= MESSAGE_WARN_THRESHOLD {
                 tracing::warn!(
                     target: "ractor::actor",
-                    actor_id = %metrics_actor_id,
                     actor_type = metrics_actor_type,
                     message = %message_repr,
                     execute_ms = exec_duration.as_millis(),
@@ -1120,15 +1114,9 @@ where
 }
 
 #[cfg(feature = "metrics")]
-pub(crate) fn emit_histogram_metric(
-    metric: &'static str,
-    actor_id: &str,
-    actor_type: &'static str,
-    value: f64,
-) {
+pub(crate) fn emit_histogram_metric(metric: &'static str, actor_type: &'static str, value: f64) {
     metrics::histogram!(
         metric,
-        "actor_id" => actor_id.to_owned(),
         "actor_type" => actor_type,
     )
     .record(value);

@@ -320,10 +320,8 @@ impl ActorProperties {
 
     #[cfg(feature = "metrics")]
     fn update_queue_depth(&self, depth: usize) {
-        let actor_id = self.id.to_string();
         metrics::gauge!(
             "ractor.queue_depth",
-            "actor_id" => actor_id,
             "actor_type" => self.actor_type_name,
         )
         .set(depth as f64);
